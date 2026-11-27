@@ -1,8 +1,8 @@
 # NetPulse
 
 A small modular FastAPI network-device monitoring API. Device and alert state is
-kept in memory and resets when the application process restarts. The API does
-not contact or probe real devices.
+stored in MySQL and persists across application restarts. The API does not
+contact or probe real devices.
 
 ## Run
 
@@ -14,6 +14,11 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
+
+Configure `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` in the
+ignored `.env` file. `DATABASE_URL` can optionally provide the complete
+`mysql+pymysql` connection URL. Create or select the target database, then apply
+the schema with `alembic upgrade head` before starting the API.
 
 Open `http://127.0.0.1:8000/docs` for the six endpoints. FastAPI builds
 `/openapi.json` from the route declarations, request/response models, examples,
@@ -51,10 +56,10 @@ Restart the server for a clean run because in-memory data resets on restart.
 - The repository owns in-memory dictionaries/lists and returns copies of stored data.
 - The event function creates and stores an alert through the repository interface.
 
-The repository is passed into `DeviceService`, so a later database-backed
-repository can replace the in-memory implementation without moving business
-rules into the storage layer. NetPulse remains one deployable modular monolith:
-all layers run in one application process and are packaged as one service.
+The repository is passed into `DeviceService`, so the MySQL-backed repository
+can replace the in-memory implementation without moving business rules into the
+storage layer. NetPulse remains one deployable modular monolith: all layers run
+in one application process and are packaged as one service.
 
 ## Tests
 

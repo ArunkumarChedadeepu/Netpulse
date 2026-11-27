@@ -18,6 +18,7 @@ class DeviceCreate(BaseModel):
                     "name": "Branch Router",
                     "device_type": "router",
                     "ip_address": "192.168.10.1",
+                    "location": "Branch Office",
                     "status": "online",
                 }
             ]
@@ -28,6 +29,7 @@ class DeviceCreate(BaseModel):
     name: str
     device_type: DeviceType
     ip_address: str
+    location: str | None = None
     status: DeviceStatus = "online"
 
     @field_validator("ip_address")
@@ -47,6 +49,7 @@ class DeviceResponse(BaseModel):
     name: str
     device_type: DeviceType
     ip_address: str
+    location: str | None = None
     status: DeviceStatus
 
 
